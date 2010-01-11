@@ -1,11 +1,11 @@
 #This file is part of Tryton.  The COPYRIGHT file at the top level of
 #this repository contains the full copyright notices and license terms.
-from trytond.model import ModelStorage
+from trytond.model import ModelSQL
 from trytond.tools import reduce_ids
 import vobject
 
 
-class Event(ModelStorage):
+class Event(ModelSQL):
     _name = 'calendar.event'
 
     def __init__(self):
@@ -16,7 +16,7 @@ class Event(ModelStorage):
             })
 
     def search(self, cursor, user, domain, offset=0, limit=None, order=None,
-            context=None, count=False):
+            context=None, count=False, query_string=False):
         if user:
             domain = domain[:]
             domain = [domain,
