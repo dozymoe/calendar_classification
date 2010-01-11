@@ -31,7 +31,8 @@ class Event(ModelSQL):
                         ('classification', '!=', 'confidential'),
                     ]]
         return super(Event, self).search(cursor, user, domain, offset=offset,
-                limit=limit, order=order, context=context, count=count)
+                limit=limit, order=order, context=context, count=count,
+                query_string=query_string)
 
     def create(self, cursor, user, values, context=None):
         new_id = super(Event, self).create(cursor, user, values, context=context)
