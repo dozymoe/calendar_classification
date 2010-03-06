@@ -4,6 +4,7 @@
 {
     'name' : 'Calendar Classification',
     'name_de_DE' : 'Kalender Klassifikation',
+    'name_es_ES' : 'Clasificación del calendario',
     'name_fr_FR' : 'Classification calendrier',
     'version' : '0.0.1',
     'author' : 'B2CK',
@@ -13,6 +14,7 @@
     'description_de_DE' : '''
     Fügt Unterstützung für die Klassifikation von Terminen in CalDAV hinzu.
 ''',
+    'description_es_ES': 'Gestiona la clasificación de eventos en CalDAV',
     'description_fr_FR': 'Gère la classification des évènements',
     'depends' : [
         'ir',
@@ -22,6 +24,7 @@
     ],
     'translation': [
         'de_DE.csv',
+        'es_ES.csv',
         'fr_FR.csv',
     ],
 }
