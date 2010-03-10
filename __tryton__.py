@@ -4,6 +4,7 @@
 {
     'name' : 'Calendar Classification',
     'name_de_DE' : 'Kalender Klassifikation',
+    'name_es_CO' : 'Clasificación del calendario',
     'name_es_ES' : 'Clasificación del calendario',
     'name_fr_FR' : 'Classification calendrier',
     'version' : '0.0.1',
@@ -14,6 +15,7 @@
     'description_de_DE' : '''
     Fügt Unterstützung für die Klassifikation von Terminen in CalDAV hinzu.
 ''',
+    'description_es_CO': 'Gestiona la clasificación de eventos en CalDAV',
     'description_es_ES': 'Gestiona la clasificación de eventos en CalDAV',
     'description_fr_FR': 'Gère la classification des évènements',
     'depends' : [
