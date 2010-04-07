@@ -111,6 +111,7 @@ class Event(ModelSQL):
 
         if fields_names is None:
             fields_names = []
+        fields_names = fields_names[:]
         to_remove = set()
         for field in ('classification', 'calendar', 'transp'):
             if field not in fields_names:
