@@ -1,8 +1,9 @@
 #This file is part of Tryton.  The COPYRIGHT file at the top level of
 #this repository contains the full copyright notices and license terms.
+import vobject
 from trytond.model import ModelSQL
 from trytond.tools import reduce_ids
-import vobject
+from trytond.transaction import Transaction
 
 
 class Event(ModelSQL):
@@ -15,8 +16,8 @@ class Event(ModelSQL):
             'opaque': 'Busy',
             })
 
-    def search(self, cursor, user, domain, offset=0, limit=None, order=None,
-            context=None, count=False, query_string=False):
+    def search(self, domain, offset=0, limit=None, order=None, count=False,
+            query_string=False):
         if user:
             domain = domain[:]
             domain = [domain,
@@ -30,30 +31,23 @@ class Event(ModelSQL):
                         ],
                         ('classification', '!=', 'confidential'),
                     ]]
-        return super(Event, self).search(cursor, user, domain, offset=offset,
-                limit=limit, order=order, context=context, count=count,
-                query_string=query_string)
+        return super(Event, self).search(domain, offset=offset, limit=limit,
+                order=order, count=count, query_string=query_string)
 
-    def create(self, cursor, user, values, context=None):
-        new_id = super(Event, self).create(cursor, user, values, context=context)
-        if self.search(cursor, user,
-                [('id', '=', new_id)], context=context, count=True) != 1:
-            self.raise_user_error(cursor, 'access_error',
-                    self._description, context=context)
+    def create(self, values):
+        new_id = super(Event, self).create(values)
+        if self.search([('id', '=', new_id)], count=True) != 1:
+            self.raise_user_error('access_error', self._description)
         return new_id
 
-    def _clean_private(self, cursor, user, record, transp, context=None):
+    def _clean_private(self, record, transp):
         '''
         Clean private record
 
-        :param cursor: the database cursor
-        :param user: the user id
         :param record: a dictionary with record values
         :param transp: the time transparency
-        :param context: the context
         '''
-        summary = self.raise_user_error(cursor, transp, raise_exception=False,
-                context=context)
+        summary = self.raise_user_error(transp, raise_exception=False)
         if 'summary' in record:
             record['summary'] = summary
 
@@ -83,20 +77,19 @@ class Event(ModelSQL):
         if vevent:
             record['vevent'] = vevent.serialize()
 
-    def read(self, cursor, user, ids, fields_names=None, context=None):
+    def read(self, ids, fields_names=None):
         rule_obj = self.pool.get('ir.rule')
+        cursor = Transaction().cursor
         int_id = False
         if isinstance(ids, (int, long)):
             int_id = True
             ids = [ids]
-        if len({}.fromkeys(ids)) != self.search(cursor, user,
-                [('id', 'in', ids)], context=context, count=True):
-            self.raise_user_error(cursor, 'access_error',
-                    self._description, context=context)
+        if len({}.fromkeys(ids)) != self.search([('id', 'in', ids)],
+                count=True):
+            self.raise_user_error('access_error', self._description)
 
         writable_ids = []
-        domain1, domain2 = rule_obj.domain_get(cursor, user, self._name,
-                mode='write', context=context)
+        domain1, domain2 = rule_obj.domain_get(self._name, mode='write')
         if domain1:
             for i in range(0, len(ids), cursor.IN_MAX):
                 sub_ids = ids[i:i + cursor.IN_MAX]
@@ -117,41 +110,35 @@ class Event(ModelSQL):
             if field not in fields_names:
                 fields_names.append(field)
                 to_remove.add(field)
-        res = super(Event, self).read(cursor, user, ids,
-                fields_names=fields_names, context=context)
+        res = super(Event, self).read(ids, fields_names=fields_names)
         for record in res:
             if record['classification'] == 'private' \
                     and record['id'] not in writable_ids:
-                self._clean_private(cursor, user, record, record['transp'],
-                        context=context)
+                self._clean_private(record, record['transp'])
             for field in to_remove:
                 del record[field]
         if int_id:
             return res[0]
         return res
 
-    def write(self, cursor, user, ids, values, context=None):
+    def write(self, ids, values):
         if isinstance(ids, (int, long)):
             ids = [ids]
-        if len({}.fromkeys(ids)) != self.search(cursor, user,
-                [('id', 'in', ids)], context=context, count=True):
-            self.raise_user_error(cursor, 'access_error',
-                    self._description, context=context)
-        res = super(Event, self).write(cursor, user, ids, values,
-                context=context)
-        if len({}.fromkeys(ids)) != self.search(cursor, user,
-                [('id', 'in', ids)], context=context, count=True):
-            self.raise_user_error(cursor, 'access_error',
-                    self._description, context=context)
+        if len({}.fromkeys(ids)) != self.search([('id', 'in', ids)],
+                count=True):
+            self.raise_user_error('access_error', self._description)
+        res = super(Event, self).write(ids, values)
+        if len({}.fromkeys(ids)) != self.search([('id', 'in', ids)],
+                count=True):
+            self.raise_user_error('access_error', self._description)
         return res
 
-    def delete(self, cursor, user, ids, context=None):
+    def delete(self, ids):
         if isinstance(ids, (int, long)):
             ids = [ids]
-        if len({}.fromkeys(ids)) != self.search(cursor, user,
-                [('id', 'in', ids)], context=context, count=True):
-            self.raise_user_error(cursor, 'access_error',
-                    self._description, context=context)
-        return super(Event, self).delete(cursor, user, ids, context=context)
+        if len({}.fromkeys(ids)) != self.search([('id', 'in', ids)],
+                count=True):
+            self.raise_user_error('access_error', self._description)
+        return super(Event, self).delete(ids)
 
 Event()
