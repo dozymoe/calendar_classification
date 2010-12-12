@@ -3,6 +3,7 @@
 #this repository contains the full copyright notices and license terms.
 {
     'name' : 'Calendar Classification',
+    'name_bg_BG' : 'Класификация за календар',
     'name_de_DE' : 'Kalender Klassifikation',
     'name_es_CO' : 'Clasificación del calendario',
     'name_es_ES' : 'Clasificación del calendario',
@@ -12,6 +13,7 @@
     'email': 'info@b2ck.com',
     'website': 'http://www.tryton.org/',
     'description': 'Handle classification of event',
+    'description_bg_BG': 'Добавя класификация на събития в CalDAV',
     'description_de_DE' : '''
     Fügt Unterstützung für die Klassifikation von Terminen in CalDAV hinzu.
 ''',
@@ -25,6 +27,7 @@
     'xml' : [
     ],
     'translation': [
+        'bg_BG.csv',
         'de_DE.csv',
         'es_CO.csv',
         'es_ES.csv',
