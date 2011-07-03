@@ -4,6 +4,7 @@ import vobject
 from trytond.model import ModelSQL
 from trytond.tools import reduce_ids
 from trytond.transaction import Transaction
+from trytond.pool import Pool
 
 
 class Event(ModelSQL):
@@ -78,7 +79,7 @@ class Event(ModelSQL):
             record['vevent'] = vevent.serialize()
 
     def read(self, ids, fields_names=None):
-        rule_obj = self.pool.get('ir.rule')
+        rule_obj = Pool().get('ir.rule')
         cursor = Transaction().cursor
         int_id = False
         if isinstance(ids, (int, long)):
