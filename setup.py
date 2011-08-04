@@ -61,4 +61,6 @@ setup(name='trytond_calendar_classification',
     [trytond.modules]
     calendar_classification = trytond.modules.calendar_classification
     """,
+    test_suite='tests',
+    test_loader='trytond.test_loader:Loader',
 )
