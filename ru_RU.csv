@@ -1,3 +1,0 @@
-type,name,res_id,src,value,fuzzy
-error,calendar.event,0,Busy,Занят,0
-error,calendar.event,0,Free,Свободно,0
