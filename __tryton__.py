@@ -4,6 +4,7 @@
 {
     'name' : 'Calendar Classification',
     'name_bg_BG' : 'Класификация за календар',
+    'name_ca_ES': 'classificació del calendari',
     'name_de_DE' : 'Kalender Klassifikation',
     'name_es_CO' : 'Clasificación del calendario',
     'name_es_ES' : 'Clasificación del calendario',
@@ -15,6 +16,9 @@
     'website': 'http://www.tryton.org/',
     'description': 'Handle classification of event',
     'description_bg_BG': 'Добавя класификация на събития в CalDAV',
+    'description_ca_ES': '''Gestiona la classificació dels esdeveniments al 
+CalDAV.
+''',
     'description_de_DE' : '''
     Fügt Unterstützung für die Klassifikation von Terminen in CalDAV hinzu.
 ''',
@@ -30,6 +34,7 @@
     ],
     'translation': [
         'locale/bg_BG.po',
+        'locale/ca_ES.po',
         'locale/cs_CZ.po',
         'locale/de_DE.po',
         'locale/es_CO.po',
