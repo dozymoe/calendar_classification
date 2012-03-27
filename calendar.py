@@ -63,7 +63,7 @@ class Event(ModelSQL):
         for field, value in (
                 ('description', ''),
                 ('categories', []),
-                ('location', False),
+                ('location', None),
                 ('status', ''),
                 ('organizer', ''),
                 ('attendees', []),
