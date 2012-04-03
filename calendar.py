@@ -22,16 +22,17 @@ class Event(ModelSQL):
         if Transaction().user:
             domain = domain[:]
             domain = [domain,
-                    ['OR',
-                        [
-                            ('classification', '=', 'confidential'),
-                            ['OR',
-                                ('calendar.owner', '=', Transaction().user),
-                                ('calendar.write_users', '=', Transaction().user),
+                ['OR',
+                    [
+                        ('classification', '=', 'confidential'),
+                        ['OR',
+                            ('calendar.owner', '=', Transaction().user),
+                            ('calendar.write_users', '=', Transaction().user),
                             ],
                         ],
-                        ('classification', '!=', 'confidential'),
-                    ]]
+                    ('classification', '!=', 'confidential'),
+                    ],
+                ]
         return super(Event, self).search(domain, offset=offset, limit=limit,
                 order=order, count=count, query_string=query_string)
 
