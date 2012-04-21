@@ -6,6 +6,7 @@
     'name_bg_BG': 'Класификация за календар',
     'name_ca_ES': 'classificació del calendari',
     'name_de_DE': 'Kalender Klassifikation',
+    'name_es_AR': 'Clasificación del calendario',
     'name_es_CO': 'Clasificación del calendario',
     'name_es_ES': 'Clasificación del calendario',
     'name_fr_FR': 'Classification calendrier',
@@ -22,6 +23,7 @@ CalDAV.
     'description_de_DE': '''
     Fügt Unterstützung für die Klassifikation von Terminen in CalDAV hinzu.
 ''',
+    'description_es_AR': 'Gestiona la clasificación de eventos en CalDAV',
     'description_es_CO': 'Gestiona la clasificación de eventos en CalDAV',
     'description_es_ES': 'Gestiona la clasificación de eventos en CalDAV',
     'description_fr_FR': 'Gère la classification des évènements',
@@ -37,6 +39,7 @@ CalDAV.
         'locale/ca_ES.po',
         'locale/cs_CZ.po',
         'locale/de_DE.po',
+        'locale/es_AR.po',
         'locale/es_CO.po',
         'locale/es_ES.po',
         'locale/fr_FR.po',
