@@ -17,7 +17,3 @@ msgstr "Libre"
 msgctxt "error:calendar.event:"
 msgid "Free"
 msgstr "Libre"
-
-msgctxt "model:calendar.event,name:"
-msgid ""
-msgstr ""
