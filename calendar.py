@@ -56,7 +56,7 @@ class Event(ModelSQL):
         if 'vevent' in record:
             vevent = record['vevent']
             if vevent:
-                vevent = vobject.readOne(vevent)
+                vevent = vobject.readOne(str(vevent))
                 if hasattr(vevent, 'summary'):
                     vevent.summary.value = summary
 
