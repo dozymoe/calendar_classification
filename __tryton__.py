@@ -9,7 +9,7 @@
     'name_es_ES' : 'Clasificación del calendario',
     'name_fr_FR' : 'Classification calendrier',
     'name_ru_RU' : 'Классификация по календарю',
-    'version' : '2.2.1',
+    'version' : '2.2.2',
     'author' : 'B2CK',
     'email': 'info@b2ck.com',
     'website': 'http://www.tryton.org/',
