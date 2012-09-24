@@ -1,23 +1,29 @@
 #This file is part of Tryton.  The COPYRIGHT file at the top level of
 #this repository contains the full copyright notices and license terms.
 import vobject
-from trytond.model import ModelSQL
+
 from trytond.tools import reduce_ids
 from trytond.transaction import Transaction
-from trytond.pool import Pool
+from trytond.pool import Pool, PoolMeta
 
 
-class Event(ModelSQL):
-    _name = 'calendar.event'
+__all__ = ['Event']
+__metaclass__ = PoolMeta
 
-    def __init__(self):
-        super(Event, self).__init__()
-        self._error_messages.update({
+
+class Event:
+    __name__ = 'calendar.event'
+
+    @classmethod
+    def __setup__(cls):
+        super(Event, cls).__setup__()
+        cls._error_messages.update({
             'transparent': 'Free',
             'opaque': 'Busy',
             })
 
-    def search(self, domain, offset=0, limit=None, order=None, count=False,
+    @classmethod
+    def search(cls, domain, offset=0, limit=None, order=None, count=False,
             query_string=False):
         if Transaction().user:
             domain = domain[:]
@@ -33,23 +39,22 @@ class Event(ModelSQL):
                     ('classification', '!=', 'confidential'),
                     ],
                 ]
-        return super(Event, self).search(domain, offset=offset, limit=limit,
-                order=order, count=count, query_string=query_string)
+        return super(Event, cls).search(domain, offset=offset, limit=limit,
+            order=order, count=count, query_string=query_string)
 
-    def create(self, values):
-        new_id = super(Event, self).create(values)
-        if self.search([('id', '=', new_id)], count=True) != 1:
-            self.raise_user_error('access_error', self._description)
-        return new_id
+    @classmethod
+    def create(cls, values):
+        event = super(Event, cls).create(values)
+        if cls.search([('id', '=', event.id)], count=True) != 1:
+            cls.raise_user_error('access_error', cls.__doc__)
+        return event
 
-    def _clean_private(self, record, transp):
+    @classmethod
+    def _clean_private(cls, record, transp):
         '''
         Clean private record
-
-        :param record: a dictionary with record values
-        :param transp: the time transparency
         '''
-        summary = self.raise_user_error(transp, raise_exception=False)
+        summary = cls.raise_user_error(transp, raise_exception=False)
         if 'summary' in record:
             record['summary'] = summary
 
@@ -79,26 +84,23 @@ class Event(ModelSQL):
         if vevent:
             record['vevent'] = vevent.serialize()
 
-    def read(self, ids, fields_names=None):
-        rule_obj = Pool().get('ir.rule')
+    @classmethod
+    def read(cls, ids, fields_names=None):
+        Rule = Pool().get('ir.rule')
         cursor = Transaction().cursor
-        int_id = False
-        if isinstance(ids, (int, long)):
-            int_id = True
-            ids = [ids]
-        if len({}.fromkeys(ids)) != self.search([('id', 'in', ids)],
+        if len(set(ids)) != cls.search([('id', 'in', ids)],
                 count=True):
-            self.raise_user_error('access_error', self._description)
+            cls.raise_user_error('access_error', cls.__doc__)
 
         writable_ids = []
-        domain1, domain2 = rule_obj.domain_get(self._name, mode='write')
+        domain1, domain2 = Rule.domain_get(cls.__name__, mode='write')
         if domain1:
             for i in range(0, len(ids), cursor.IN_MAX):
                 sub_ids = ids[i:i + cursor.IN_MAX]
                 red_sql, red_ids = reduce_ids('id', sub_ids)
-                cursor.execute('SELECT id FROM "' + self._table + '" ' \
-                        'WHERE ' + red_sql + ' AND (' + domain1 + ')',
-                        red_ids + domain2)
+                cursor.execute('SELECT id FROM "' + cls._table + '" '
+                    'WHERE ' + red_sql + ' AND (' + domain1 + ')',
+                    red_ids + domain2)
                 writable_ids.extend(x[0] for x in cursor.fetchall())
         else:
             writable_ids = ids
@@ -112,35 +114,28 @@ class Event(ModelSQL):
             if field not in fields_names:
                 fields_names.append(field)
                 to_remove.add(field)
-        res = super(Event, self).read(ids, fields_names=fields_names)
+        res = super(Event, cls).read(ids, fields_names=fields_names)
         for record in res:
             if record['classification'] == 'private' \
                     and record['id'] not in writable_ids:
-                self._clean_private(record, record['transp'])
+                cls._clean_private(record, record['transp'])
             for field in to_remove:
                 del record[field]
-        if int_id:
-            return res[0]
         return res
 
-    def write(self, ids, values):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        if len({}.fromkeys(ids)) != self.search([('id', 'in', ids)],
+    @classmethod
+    def write(cls, events, values):
+        if len(set(events)) != cls.search([('id', 'in', map(int, events))],
                 count=True):
-            self.raise_user_error('access_error', self._description)
-        res = super(Event, self).write(ids, values)
-        if len({}.fromkeys(ids)) != self.search([('id', 'in', ids)],
+            cls.raise_user_error('access_error', cls.__doc__)
+        super(Event, cls).write(events, values)
+        if len(set(events)) != cls.search([('id', 'in', map(int, events))],
                 count=True):
-            self.raise_user_error('access_error', self._description)
-        return res
+            cls.raise_user_error('access_error', cls.__doc__)
 
-    def delete(self, ids):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        if len({}.fromkeys(ids)) != self.search([('id', 'in', ids)],
+    @classmethod
+    def delete(cls, events):
+        if len(set(events)) != cls.search([('id', 'in', map(int, events))],
                 count=True):
-            self.raise_user_error('access_error', self._description)
-        return super(Event, self).delete(ids)
-
-Event()
+            cls.raise_user_error('access_error', cls.__doc__)
+        super(Event, cls).delete(events)
