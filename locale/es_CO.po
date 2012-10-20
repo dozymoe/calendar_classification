@@ -2,12 +2,10 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
-#, fuzzy
 msgctxt "error:calendar.event:"
 msgid "Busy"
 msgstr "Ocupado"
 
-#, fuzzy
 msgctxt "error:calendar.event:"
 msgid "Free"
 msgstr "Libre"
