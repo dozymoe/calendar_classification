@@ -43,11 +43,12 @@ class Event:
             order=order, count=count, query_string=query_string)
 
     @classmethod
-    def create(cls, values):
-        event = super(Event, cls).create(values)
-        if cls.search([('id', '=', event.id)], count=True) != 1:
+    def create(cls, vlist):
+        events = super(Event, cls).create(vlist)
+        if (cls.search([('id', 'in', [x.id for x in events])], count=True) != 
+                len(events)):
             cls.raise_user_error('access_error', cls.__doc__)
-        return event
+        return events
 
     @classmethod
     def _clean_private(cls, record, transp):
