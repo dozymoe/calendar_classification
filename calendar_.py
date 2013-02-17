@@ -45,8 +45,8 @@ class Event:
     @classmethod
     def create(cls, vlist):
         events = super(Event, cls).create(vlist)
-        if (cls.search([('id', 'in', [x.id for x in events])], count=True) != 
-                len(events)):
+        if (cls.search([('id', 'in', [x.id for x in events])], count=True)
+                != len(events)):
             cls.raise_user_error('access_error', cls.__doc__)
         return events
 
