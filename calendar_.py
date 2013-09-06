@@ -24,7 +24,7 @@ class Event:
 
     @classmethod
     def search(cls, domain, offset=0, limit=None, order=None, count=False,
-            query_string=False):
+            query=False):
         if Transaction().user:
             domain = domain[:]
             domain = [domain,
@@ -40,7 +40,7 @@ class Event:
                     ],
                 ]
         return super(Event, cls).search(domain, offset=offset, limit=limit,
-            order=order, count=count, query_string=query_string)
+            order=order, count=count, query=query)
 
     @classmethod
     def create(cls, vlist):
@@ -89,19 +89,19 @@ class Event:
     def read(cls, ids, fields_names=None):
         Rule = Pool().get('ir.rule')
         cursor = Transaction().cursor
+        table = cls.__table__()
         if len(set(ids)) != cls.search([('id', 'in', ids)],
                 count=True):
             cls.raise_user_error('access_error', cls.__doc__)
 
         writable_ids = []
-        domain1, domain2 = Rule.domain_get(cls.__name__, mode='write')
-        if domain1:
+        domain = Rule.domain_get(cls.__name__, mode='write')
+        if domain:
             for i in range(0, len(ids), cursor.IN_MAX):
                 sub_ids = ids[i:i + cursor.IN_MAX]
-                red_sql, red_ids = reduce_ids('id', sub_ids)
-                cursor.execute('SELECT id FROM "' + cls._table + '" '
-                    'WHERE ' + red_sql + ' AND (' + domain1 + ')',
-                    red_ids + domain2)
+                red_sql = reduce_ids(table.id, sub_ids)
+                cursor.execute(*table.select(table.id,
+                        where=red_sql & table.id.in_(domain)))
                 writable_ids.extend(x[0] for x in cursor.fetchall())
         else:
             writable_ids = ids
