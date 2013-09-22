@@ -7,13 +7,5 @@ msgid "Busy"
 msgstr "Occupé"
 
 msgctxt "error:calendar.event:"
-msgid "Busy"
-msgstr "Occupé"
-
-msgctxt "error:calendar.event:"
-msgid "Free"
-msgstr "Libre"
-
-msgctxt "error:calendar.event:"
 msgid "Free"
 msgstr "Libre"
