@@ -125,14 +125,16 @@ class Event:
         return res
 
     @classmethod
-    def write(cls, events, values):
-        if len(set(events)) != cls.search([('id', 'in', map(int, events))],
-                count=True):
-            cls.raise_user_error('access_error', cls.__doc__)
-        super(Event, cls).write(events, values)
-        if len(set(events)) != cls.search([('id', 'in', map(int, events))],
-                count=True):
-            cls.raise_user_error('access_error', cls.__doc__)
+    def write(cls, *args):
+        for events in args[::2]:
+            if len(set(events)) != cls.search([('id', 'in', map(int, events))],
+                    count=True):
+                cls.raise_user_error('access_error', cls.__doc__)
+        super(Event, cls).write(*args)
+        for events in args[::2]:
+            if len(set(events)) != cls.search([('id', 'in', map(int, events))],
+                    count=True):
+                cls.raise_user_error('access_error', cls.__doc__)
 
     @classmethod
     def delete(cls, events):
