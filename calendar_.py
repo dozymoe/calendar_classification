@@ -2,7 +2,7 @@
 #this repository contains the full copyright notices and license terms.
 import vobject
 
-from trytond.tools import reduce_ids
+from trytond.tools import reduce_ids, grouped_slice
 from trytond.transaction import Transaction
 from trytond.pool import Pool, PoolMeta
 
@@ -97,8 +97,7 @@ class Event:
         writable_ids = []
         domain = Rule.domain_get(cls.__name__, mode='write')
         if domain:
-            for i in range(0, len(ids), cursor.IN_MAX):
-                sub_ids = ids[i:i + cursor.IN_MAX]
+            for sub_ids in grouped_slice(ids):
                 red_sql = reduce_ids(table.id, sub_ids)
                 cursor.execute(*table.select(table.id,
                         where=red_sql & table.id.in_(domain)))
