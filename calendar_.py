@@ -30,17 +30,23 @@ class Event:
             domain = [domain,
                 ['OR',
                     [
-                        ('classification', '=', 'confidential'),
+                        ('classification', '=', 'private'),
                         ['OR',
                             ('calendar.owner', '=', Transaction().user),
                             ('calendar.write_users', '=', Transaction().user),
                             ],
                         ],
-                    ('classification', '!=', 'confidential'),
+                    ('classification', '!=', 'private'),
                     ],
                 ]
-        return super(Event, cls).search(domain, offset=offset, limit=limit,
+        records = super(Event, cls).search(domain, offset=offset, limit=limit,
             order=order, count=count, query=query)
+
+        if Transaction().user:
+            # Clear the cache as it was not cleaned for confidential
+            cache = Transaction().cursor.get_cache()
+            cache.pop(cls.__name__, None)
+        return records
 
     @classmethod
     def create(cls, vlist):
@@ -51,9 +57,9 @@ class Event:
         return events
 
     @classmethod
-    def _clean_private(cls, record, transp):
+    def _clean_confidential(cls, record, transp):
         '''
-        Clean private record
+        Clean confidential record
         '''
         summary = cls.raise_user_error(transp, raise_exception=False)
         if 'summary' in record:
@@ -116,9 +122,9 @@ class Event:
                 to_remove.add(field)
         res = super(Event, cls).read(ids, fields_names=fields_names)
         for record in res:
-            if record['classification'] == 'private' \
+            if record['classification'] == 'confidential' \
                     and record['id'] not in writable_ids:
-                cls._clean_private(record, record['transp'])
+                cls._clean_confidential(record, record['transp'])
             for field in to_remove:
                 del record[field]
         return res
