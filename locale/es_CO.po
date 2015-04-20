@@ -53,8 +53,17 @@ msgid ":"
 msgstr ":"
 
 msgctxt "error:calendar.event:"
+msgid "Busy"
+msgstr ""
+
+msgctxt "error:calendar.event:"
 msgid "Cancelled Event: %s @ %s"
 msgstr "Evento Cancelado: %s @ %s"
+
+#, fuzzy
+msgctxt "error:calendar.event:"
+msgid "Free"
+msgstr "Gratis"
 
 msgctxt "error:calendar.event:"
 msgid "Invitation: %s @ %s"
