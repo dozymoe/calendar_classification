@@ -101,7 +101,7 @@ class Event:
             cls.raise_user_error('access_error', cls.__doc__)
 
         writable_ids = []
-        domain = Rule.domain_get(cls.__name__, mode='write')
+        domain = Rule.query_get(cls.__name__, mode='write')
         if domain:
             for sub_ids in grouped_slice(ids):
                 red_sql = reduce_ids(table.id, sub_ids)
