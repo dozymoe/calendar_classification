@@ -6,7 +6,6 @@ msgctxt "error:calendar.event:"
 msgid "Busy"
 msgstr ""
 
-#, fuzzy
 msgctxt "error:calendar.event:"
 msgid "Free"
-msgstr "Gratis"
+msgstr ""
