@@ -44,7 +44,7 @@ class Event:
 
         if Transaction().user:
             # Clear the cache as it was not cleaned for confidential
-            cache = Transaction().cursor.get_cache()
+            cache = Transaction().get_cache()
             cache.pop(cls.__name__, None)
         return records
 
@@ -94,7 +94,7 @@ class Event:
     @classmethod
     def read(cls, ids, fields_names=None):
         Rule = Pool().get('ir.rule')
-        cursor = Transaction().cursor
+        cursor = Transaction().connection.cursor()
         table = cls.__table__()
         if len(set(ids)) != cls.search([('id', 'in', ids)],
                 count=True):
