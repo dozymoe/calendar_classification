@@ -4,9 +4,8 @@ msgstr "Content-Type: text/plain; charset=utf-8\n"
 
 msgctxt "error:calendar.event:"
 msgid "Busy"
-msgstr ""
+msgstr "Ocupado"
 
-#, fuzzy
 msgctxt "error:calendar.event:"
 msgid "Free"
-msgstr "Gratis"
+msgstr "Libre"
