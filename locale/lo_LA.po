@@ -4,8 +4,8 @@ msgstr "Content-Type: text/plain; charset=utf-8\n"
 
 msgctxt "error:calendar.event:"
 msgid "Busy"
-msgstr ""
+msgstr "ບໍ່ວ່າງ"
 
 msgctxt "error:calendar.event:"
 msgid "Free"
-msgstr ""
+msgstr "ວ່າງ"
